@@ -19,6 +19,10 @@ jobs:
         popd
     - name: Build
       run: dotnet publish ScheduledTask.csproj --output published --configuration Release
+    - name: Setup .NET Core 2.x for deployment
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '2.2.207'
     - name: Deploy
       run: bash .github/workflows/deploy.sh
       env:
