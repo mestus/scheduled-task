@@ -1,0 +1,19 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - run: .\build.ps1 ${{secrets.GITHUB_TOKEN}} $env:GITHUB_REF.Split('/')[-1].Substring(1)
+      shell: pwsh

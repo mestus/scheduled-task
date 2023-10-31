@@ -1,0 +1,22 @@
+name: Pre-release
+
+on:
+  push:
+    branches:
+      - main
+      - 'release/**'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - run: .\build.ps1 ${{ secrets.GITHUB_TOKEN }}
+      shell: pwsh
