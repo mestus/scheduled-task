@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <OutputType>Exe</OutputType>
-        <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
+        <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
         <UserSecretsId>dotnet-ScheduledTask-CF2855AC-089E-43B5-BEE9-C9EF79610F7E</UserSecretsId>
     </PropertyGroup>
 

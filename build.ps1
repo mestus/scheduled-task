@@ -1,10 +1,12 @@
 $token = $args[0]
+$project = "ScheduledTask"
 $packageVersion = $args[1] ?? ""
 $repositoryUrl = "https://github.com/$env:GITHUB_REPOSITORY"
 $owner = $env:GITHUB_REPOSITORY.Split('/')[0]
 $feedUrl = "https://nuget.pkg.github.com/$owner/index.json"
 $configuration = "Release"
 $output = "output"
+$runtime = "win-x64"
 
 if ($packageVersion -eq "")
 {
@@ -32,6 +34,7 @@ if ($packageVersion -eq "")
 }
 
 dotnet restore
+dotnet tool restore
 dotnet build --no-restore --configuration $configuration
 if ($LASTEXITCODE -eq 1)
 {
@@ -42,8 +45,24 @@ if ($LASTEXITCODE -eq 1)
 {
     throw "Tests FAILED"
 }
+
+dotnet publish --configuration $configuration -p:PackageVersion=$packageVersion -o $output -r $runtime --self-contained true -p:RepositoryType=git -p:RepositoryUrl="$repositoryUrl"  $project.csproj
+if ($LASTEXITCODE -eq 1)
+{
+    throw "publish FAILED"
+}
+
 if ($packageVersion -ne "--no-pack")
 {
-    dotnet pack --no-build --configuration $configuration -p:PackageVersion=$packageVersion -p:RepositoryType=git -p:RepositoryUrl="$repositoryUrl" -o $output
-    dotnet nuget push output/*.nupkg -k $token -s $feedUrl
+    dotnet dotnet-octo pack --id=$project --version=$packageVersion --basePath=$output
+    if ($LASTEXITCODE -eq 1)
+    {
+        throw "dotnet-octo pack FAILED"
+    }
+
+    dotnet nuget push *.nupkg -k $token -s $feedUrl
+    if ($LASTEXITCODE -eq 1)
+    {
+        throw "dotnet nuget push FAILED"
+    }
 }
