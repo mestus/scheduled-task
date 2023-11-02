@@ -2,11 +2,13 @@ $token = $args[0]
 $project = "ScheduledTask"
 $packageVersion = $args[1] ?? ""
 $repositoryUrl = "https://github.com/$env:GITHUB_REPOSITORY"
-$owner = $env:GITHUB_REPOSITORY.Split('/')[0]
+$owner = "$env:GITHUB_REPOSITORY_OWNER"
 $feedUrl = "https://nuget.pkg.github.com/$owner/index.json"
 $configuration = "Release"
 $output = "output"
 $runtime = "win-x64"
+
+Write-Host "Repository owner: [$($env:GITHUB_REPOSITORY_OWNER)]"
 
 if ($packageVersion -eq "")
 {
